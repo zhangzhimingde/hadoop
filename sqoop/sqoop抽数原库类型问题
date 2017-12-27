@@ -1,0 +1,21 @@
+sqoop抽取mysql数据 遇到问题及解决方案
+
+sqoop import --connect 'jdbc:mysql://127.0.0.1/dbname' --username 'username' --password 'userpass' --query "select product_id, price, sale_price, shop_id from product_base where creation_time > '2010-10-01' and \$CONDITIONS" --target-dir '/user/dwcmt/dwcmt_tmp/product_base' --fields-terminated-by '\t' --lines-terminated-by '
+
+ 
+
+这是一条一般的抽取数据的命令，但是很有可能报错。因为sqoop在将mysql中的数据类型转换为java中的数据类型时有自己的默认体系，一般没什么问题。但这里product_id在mysql中是unsigned int的，而sqoop生成的java文件中是按int处理的，所以值大于int区间就会出问题。错误内容如下
+
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLDataException: '4.294967295E9' in column '1' is outside valid range for the dataty
+
+ 
+
+解决方案就是自定义mysql中列转换为哪种java数据类型。加入如下参数即可
+
+ --map-column-java product_id=Long,price=Double,sale_price=Double,shop_id=Long
+
+注意sqoop1.3版本是没有这个参数的，升级到新版如1.4.4即可，1.4.5似乎也有一些bug
+
+   
+
+参考网站： https://www.cnblogs.com/barthu/p/4477515.html
