@@ -1,3 +1,4 @@
+测试添加
 sqoop抽取mysql数据 遇到问题及解决方案
 
 sqoop import --connect 'jdbc:mysql://127.0.0.1/dbname' --username 'username' --password 'userpass' --query "select product_id, price, sale_price, shop_id from product_base where creation_time > '2010-10-01' and \$CONDITIONS" --target-dir '/user/dwcmt/dwcmt_tmp/product_base' --fields-terminated-by '\t' --lines-terminated-by '
